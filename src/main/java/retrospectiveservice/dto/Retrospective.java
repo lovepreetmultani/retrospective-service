@@ -11,6 +11,16 @@ public class Retrospective {
     private List<String> participants;
     private List<FeedbackItem> feedbackItems;
 
+    public Retrospective() {
+    }
+
+    public Retrospective(String name, String summary, String date, List<String> participants, List<FeedbackItem> feedbackItems) {
+        this.name = name;
+        this.summary = summary;
+        this.date = date;
+        this.participants = participants;
+        this.feedbackItems = feedbackItems;
+    }
 
     public String getName() {
         return name;
