@@ -1,4 +1,4 @@
-package sis_tv.retrospectiveservice;
+package retrospectiveservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
