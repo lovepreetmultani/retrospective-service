@@ -1,20 +1,19 @@
 package retrospectiveservice.controller;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import retrospectiveservice.dto.FeedbackItem;
 import retrospectiveservice.dto.Retrospective;
+import retrospectiveservice.service.RetrospectiveService;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-// RetrospectiveController.java
 @RestController
 @RequestMapping("/retrospective")
 public class RetrospectiveController {
@@ -22,9 +21,7 @@ public class RetrospectiveController {
     private List<Retrospective> retrospectives = new ArrayList<>();
 
     // Endpoint to create a new retrospective
-    @ResponseBody
-    @RequestMapping(value = "/create", headers = {
-            "content-type=application/json" }, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+   @PostMapping("/create")
     public ResponseEntity<String> createRetrospective(@RequestBody Retrospective retrospective) {
         System.out.println("request body create is: "+retrospective.toString()+ "date"+retrospective.getDate()+"participant"+retrospective.getParticipants());
         if (retrospective.getDate() == null || retrospective.getParticipants() == null) {
@@ -104,10 +101,10 @@ public class RetrospectiveController {
     }
 
     // Endpoint to retrieve retrospectives with pagination
-    @GetMapping
+    @GetMapping("/pagination")
     public ResponseEntity<List<Retrospective>> getAllRetrospectives(
-            @RequestParam(defaultValue = "1") int currentPage,
-            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(value = "currentPage", defaultValue = "0", required = false) int currentPage,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
             @RequestHeader(name = "Accept", defaultValue = MediaType.APPLICATION_JSON_VALUE) String acceptHeader) {
 
         // Apply pagination
@@ -121,6 +118,11 @@ public class RetrospectiveController {
         return acceptHeader.contains(MediaType.APPLICATION_XML_VALUE)
                 ? ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_XML).body(retrospectivesForPage)
                 : ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(retrospectivesForPage);
+    }
+
+    @GetMapping
+    public List<Retrospective> getAllRetrospectives() {
+        return retrospectives;
     }
 
     // Endpoint to search retrospectives by date

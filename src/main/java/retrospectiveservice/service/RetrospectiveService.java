@@ -5,7 +5,10 @@ import org.springframework.stereotype.Service;
 import retrospectiveservice.dto.FeedbackItem;
 import retrospectiveservice.dto.Retrospective;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -63,25 +66,24 @@ public class RetrospectiveService {
     public List<Retrospective> getAllRetrospectives(int currentPage, int pageSize) {
         return retrospectives.subList((currentPage - 1) * pageSize, Math.min(currentPage * pageSize, retrospectives.size()));
     }
+    public List<Retrospective> searchRetrospectivesByDate(String dateString, int currentPage, int pageSize) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = dateFormat.parse(dateString);
 
-    public List<Retrospective> searchRetrospectivesByDate(String date, int currentPage, int pageSize) {
-        List<Retrospective> matchedRetrospectives = retrospectives.stream()
-                .filter(retrospective -> retrospective.getDate().equals(date))
-                .collect(Collectors.toList());
+            // Assuming Retrospective has a 'date' field
+            List<Retrospective> filteredRetrospectives = retrospectives.stream()
+                    .filter(retrospective -> retrospective.getDate().equals(date))
+                    .collect(Collectors.toList());
 
-        return matchedRetrospectives.subList((currentPage - 1) * pageSize, Math.min(currentPage * pageSize, matchedRetrospectives.size()));
-    }
-    public List<Retrospective> searchRetrospectivesByDate(String date) {
-        // Implement date-based filtering logic
-        // This is a simplified example, and you may want to use a Date object and proper date comparison
-        List<Retrospective> filteredRetrospectives = new ArrayList<>();
-        for (Retrospective retrospective : retrospectives) {
-            if (date.equals(retrospective.getDate().toString())) {
-                filteredRetrospectives.add(retrospective);
-            }
+            // Pagination logic
+            int start = (currentPage - 1) * pageSize;
+            int end = Math.min(start + pageSize, filteredRetrospectives.size());
+
+            return filteredRetrospectives.subList(start, end);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Invalid date format. Use dd/MM/yyyy");
         }
-
-        return filteredRetrospectives;
     }
 
     private Retrospective findRetrospectiveByName(String name) {
