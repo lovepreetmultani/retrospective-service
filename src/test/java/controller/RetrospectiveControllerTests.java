@@ -79,8 +79,6 @@ public class RetrospectiveControllerTests {
                         .andExpect(content().string("Retrospective not found"));
     }
 
-    // Add more test cases for other endpoints and edge cases
-
     private static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
