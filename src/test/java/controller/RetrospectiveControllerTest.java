@@ -1,6 +1,6 @@
 @RunWith(SpringRunner.class)
 @WebMvcTest(RetrospectiveController.class)
-public class RetrospectiveControllerTests {
+public class RetrospectiveControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
