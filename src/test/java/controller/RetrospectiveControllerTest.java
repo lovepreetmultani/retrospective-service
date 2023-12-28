@@ -1,7 +1,13 @@
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import retrospectiveservice.controller.RetrospectiveController;
+import retrospectiveservice.dto.FeedbackItem;
+import retrospectiveservice.dto.Retrospective;
+import retrospectiveservice.service.RetrospectiveService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(RetrospectiveController.class)
@@ -79,7 +85,7 @@ public class RetrospectiveControllerTest {
 
                 mockMvc.perform(put("/retrospective/{name}/feedback/{feedbackName}", participantName, feedbackItemId)
                                 .contentType(MediaType.APPLICATION_JSON)
-                         git add        .content(asJsonString(updatedFeedbackItem)))
+                                .content(asJsonString(updatedFeedbackItem)))
                         .andExpect(status().isNotFound())
                         .andExpect(content().string("Retrospective not found"));
     }
